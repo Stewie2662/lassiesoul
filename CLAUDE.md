@@ -194,3 +194,11 @@ Empieza por el flujo de admin y shelter juntos:
 
 El objetivo es que el admin pueda operar en nombre de cualquier 
 protectora para agilizarles la vida.
+## Estructura de archivos sensibles o de referencia
+
+- Todo archivo que no sea necesario para el funcionamiento de la app 
+  va en la carpeta `docs/` — esta carpeta está en `.gitignore` y 
+  nunca se sube a GitHub
+- Ejemplos: migraciones SQL, notas, bocetos, scripts de utilidad
+- Nunca crear archivos .sql, .md de notas o scripts sueltos 
+  en la raíz del proyecto
