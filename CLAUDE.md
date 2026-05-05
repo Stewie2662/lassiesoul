@@ -178,3 +178,19 @@ Estas claves están en Supabase → Settings → API.
 - Sanitizar cualquier input antes de mostrarlo en pantalla
 - No mostrar mensajes de error técnicos al usuario final
 - Nunca guardar datos sensibles en localStorage
+
+El sistema tiene tres roles:
+
+- admin (yo, Steeven): acceso total a todo, puede gestionar 
+  cualquier protectora y subir animales en su nombre
+- shelter: gestiona solo sus propios animales y perfil
+- adopter: solo ve el portal público
+
+Empieza por el flujo de admin y shelter juntos:
+1. Auth con roles (admin vs shelter)
+2. Panel admin: ver todas las protectoras, entrar en cualquiera
+3. Panel shelter: ver y gestionar sus propios animales
+4. Formulario de animal compartido entre ambos roles
+
+El objetivo es que el admin pueda operar en nombre de cualquier 
+protectora para agilizarles la vida.
