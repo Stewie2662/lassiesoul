@@ -1,20 +1,66 @@
-import { useEffect, useState } from 'react'
-import { supabase } from './lib/supabase'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { useAuth } from './hooks/useAuth'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { Login } from './pages/Login'
+import { Register } from './pages/Register'
+import { Dashboard } from './pages/Dashboard'
+import { Unauthorized } from './pages/Unauthorized'
+import { AdminDashboard } from './pages/admin/AdminDashboard'
+import { ShelterDetail } from './pages/admin/ShelterDetail'
+import { ShelterDashboard } from './pages/shelter/ShelterDashboard'
 
 function App() {
-  const [connected, setConnected] = useState(false)
+  const { loading } = useAuth()
 
-  useEffect(() => {
-    supabase.auth.getSession().then(() => {
-      setConnected(true)
-    })
-  }, [])
+  if (loading) {
+    return <div style={{ padding: '2rem', textAlign: 'center' }}>Cargando...</div>
+  }
 
   return (
-    <div>
-      <h1>LassieSoul</h1>
-      <p>{connected ? 'Conectado a Supabase' : 'Conectando...'}</p>
-    </div>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
+
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/dashboard/admin"
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/dashboard/admin/shelters/:id"
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <ShelterDetail />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/dashboard/shelter"
+        element={
+          <ProtectedRoute requiredRole="shelter">
+            <ShelterDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+    </Routes>
   )
 }
 
