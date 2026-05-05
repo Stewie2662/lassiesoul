@@ -143,3 +143,38 @@ Estas claves están en Supabase → Settings → API.
 - El proyecto de baile (congresos + adopciones) se integra en Fase 2
 - Este proyecto es la carta de presentación profesional de Steeven
 - Prioridad: que funcione bien y esté bien hecho antes que añadir features
+
+## Principios de seguridad — obligatorios en todo el código
+
+### Generales
+- Nunca confiar en datos del cliente — validar siempre en el servidor
+- RLS activado en todas las tablas, sin excepciones
+- Nunca exponer claves secretas en el frontend
+- Variables de entorno para toda credencial, nunca hardcodeadas
+
+### Contra inyección SQL
+- Usar siempre el cliente de Supabase con parámetros — nunca 
+  concatenar strings para construir queries
+- Correcto:   supabase.from('animals').select().eq('id', id)
+- Incorrecto: supabase.rpc(`SELECT * WHERE id = ${id}`)
+
+### Autenticación y autorización
+- Toda ruta del dashboard requiere sesión activa verificada
+- Verificar siempre que el recurso pertenece al usuario autenticado
+  antes de leer, editar o borrar
+- Tokens JWT gestionados por Supabase Auth — no crear los propios
+
+### Subida de archivos
+- Validar tipo MIME y tamaño antes de subir a Supabase Storage
+- Solo permitir imágenes: jpg, png, webp
+- Tamaño máximo: 5MB por foto
+
+### Datos públicos vs privados
+- Solo llegan al portal público los animales con is_public = true
+- Los datos de donantes y contactos nunca son públicos
+- Las políticas RLS son la última línea de defensa — siempre activas
+
+### Frontend
+- Sanitizar cualquier input antes de mostrarlo en pantalla
+- No mostrar mensajes de error técnicos al usuario final
+- Nunca guardar datos sensibles en localStorage
